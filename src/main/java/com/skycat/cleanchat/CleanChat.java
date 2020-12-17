@@ -8,6 +8,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = CleanChat.MODID, name = CleanChat.NAME, version = CleanChat.VERSION)
 
+/**
+ * Main mod class for CleanChat.
+ * @author skycatminepokie
+ * @version 12/16/2020
+ */
 public class CleanChat{
     public static final String NAME = "Clean Chat";
     public static final String MODID = "cleanchat";

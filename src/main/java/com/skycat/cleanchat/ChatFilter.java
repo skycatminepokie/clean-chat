@@ -1,8 +1,10 @@
 package com.skycat.cleanchat;
 
+import lombok.Getter;
+
 public class ChatFilter {
     private boolean enabled;
-    private ChatFilterSetting[] settings;
+    @Getter private ChatFilterSetting[] settings;
 
     ChatFilter(boolean enabled) {
         this.enabled = enabled;

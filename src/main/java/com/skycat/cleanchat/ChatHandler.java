@@ -42,6 +42,7 @@ public class ChatHandler {
             //If the message is blocked
             event.setCanceled(true);
             messagesRemoved++;
+            System.out.println("Removed a message.");
         }
     }
 }

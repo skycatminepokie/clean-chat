@@ -2,7 +2,7 @@ package com.skycat.cleanchat;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+//What does static mean in an import?
 import static com.skycat.cleanchat.MessageSource.*;
 
 public class ChatFilterSetting {
@@ -16,13 +16,11 @@ public class ChatFilterSetting {
     }
 
     private static Pattern generateRegex(String message) {
-        //TODO Change to be a Pattern object?
-        //TODO Work with capturing and recording username?
+        //TODO Work with capturing and recording username
         return Pattern.compile(".*?" + message + ".*");
     }
 
     public boolean isMessageAllowed(String message, MessageSource messageSource) {
-        //TODO Return the result of a regex comparison. Maybe return the matcher???
         //To match ranked player messages? (hopefully?): "\\[.*?\\] (?'username'.*?): .*?" + message + ".*"
         if ((messageSource == this.messageSource)||messageSource == UNKNOWN_ALL) {
             return !(regex.matcher(message).matches() && this.enabled);

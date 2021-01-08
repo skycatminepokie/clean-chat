@@ -1,4 +1,5 @@
 package com.skycat.cleanchat;
+import lombok.Getter;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -11,17 +12,18 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 /**
  * Main mod class for CleanChat.
  * @author skycatminepokie
- * @version 12/16/2020
+ * @version 1/8/2021
  */
 public class CleanChat{
     public static final String NAME = "Clean Chat";
     public static final String MODID = "cleanchat";
     public static final String VERSION = "1.8.9-A1";
-
+    @Getter static ChatHandler chatHandler = new ChatHandler();
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new ChatHandler());
+        chatHandler.loadChatFilter();
+        MinecraftForge.EVENT_BUS.register(chatHandler);
         //Is this the right event?
         ClientCommandHandler.instance.registerCommand(new CleanChatCommand());
     }
@@ -31,4 +33,5 @@ public class CleanChat{
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {}
+
 }

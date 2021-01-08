@@ -1,6 +1,5 @@
 package com.skycat.cleanchat;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -9,6 +8,10 @@ import net.minecraft.util.*;
 import java.util.List;
 
 public class CleanChatCommand extends CommandBase {
+    private static void displayTextMainMenu() {
+        ChatMessageSender.displayTextMainMenu();
+    }
+
     @Override
     public String getCommandName() {
         return "cleanchat";
@@ -21,35 +24,107 @@ public class CleanChatCommand extends CommandBase {
 
     @Override //Do I need this override?
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        /*
-        System.out.println("Command used!");
-        if (args.length > 0) {
-            if (args[0].equals("printHi")) {
-                System.out.println("Hi");
-                Minecraft.getMinecraft().thePlayer.addChatComponentMessage(
-                        new ChatComponentText("Hello")
-                                .setChatStyle(new ChatStyle()
-                                        .setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/say hi"))
-                                        .setColor(EnumChatFormatting.YELLOW)
-                                        .setUnderlined(true)));
-            } else if (args[0].equals("printBye")) {
-                System.out.println("Bye");
-                Minecraft.getMinecraft().thePlayer.addChatComponentMessage(ChatMessageSender.getConfirmReport());
-            }
-            System.out.println("Argument: " + args[0]);
-        }
-        */
         if (args.length == 0) {
             displayTextMainMenu();
         } else {
-            if (args.length == 1) {
-                String firstArg = args[0].toLowerCase();
-                if (firstArg.startsWith("list")||firstArg.equals("l")) {
-                    listFilterSettings(
+
+            String firstArg = args[0].toLowerCase();
+
+            if (firstArg.equalsIgnoreCase("reload")) {
+                CleanChat.getChatHandler().loadChatFilter();
+                ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Reloaded filter."));
+            }
+            if (firstArg.startsWith("list") || firstArg.equals("l")) {
+                //TODO: Fix the on/off specification not working
+                if (args.length >= 1) {
+                    ChatMessageSender.listFilterSettings(
                             firstArg.endsWith("on") || firstArg.endsWith("all"),
                             firstArg.endsWith("off") || firstArg.endsWith("all"));
                     if (firstArg.equals("list") || firstArg.equals("l")) {
-                        listFilterSettings(true, true);
+                        ChatMessageSender.listFilterSettings(true, true);
+                    }
+                }
+            } else {
+
+                if (args[0].equalsIgnoreCase("setting")) {
+
+                    if (args.length == 3) {
+                        //Rule is being updated or deleted
+
+                        //Determine if the name is valid
+                        boolean isValidName = false;
+                        for (String s : CleanChat.getChatHandler().getChatFilter().getSettingNames()) {
+                            if (args[1].equalsIgnoreCase(s)) {
+                                isValidName = true;
+                                break;
+                            }
+                        }
+
+                        if (isValidName) {
+                            ChatFilterSetting setting = null;
+                            for (ChatFilterSetting chatFilterSetting : CleanChat.getChatHandler().getChatFilter().getSettings()) {
+                                if (chatFilterSetting.getName().equalsIgnoreCase(args[1])) {
+                                    setting = chatFilterSetting;
+                                    break;
+                                }
+                            }
+
+                            if (setting != null) {
+                                //Turn on the rule
+                                if (args[2].equalsIgnoreCase("on") || args[2].equalsIgnoreCase("setOn")) {
+                                    setting.setEnabled(true);
+                                    ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule updated"));
+                                } else {
+                                    //Turn off the rule
+                                    if (args[2].equalsIgnoreCase("off") || args[2].equalsIgnoreCase("setOff")) {
+                                        setting.setEnabled(false);
+                                        ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule updated"));
+                                    } else {
+                                        //Turn the rule on if it is off, and off if it is on.
+                                        if (args[2].equalsIgnoreCase("toggle")) {
+                                            setting.setEnabled(!setting.isEnabled());
+                                            ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule updated"));
+                                        } else {
+                                            if (args[2].equalsIgnoreCase("delete")) {
+
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                //Should never happen
+                                ChatMessageSender.sendMessageToPlayer(new ChatComponentText("That's strange. You entered a valid name, but CleanChat couldn't find the related setting. Feel free to report this to the developer."));
+                            }
+                        } else {
+                            //The user entered a filter name that does not exist, and therefore cannot be deleted or modified
+                            ChatMessageSender.sendMessageToPlayer(new ChatComponentText("That's not a valid setting name :/"));
+                        }
+                    }
+
+
+                    if (args.length >= 4) {
+
+                        //Create a filter
+                        if (args[1].equalsIgnoreCase("create")) {
+                            ChatFilterSetting[] oldList = CleanChat.getChatHandler().getChatFilter().getSettings();
+                            ChatFilterSetting[] newList = new ChatFilterSetting[oldList.length];
+                            for (int i = 0; i < oldList.length; i++) {
+                                newList[i] = oldList[i];
+                            }
+
+                            // /cleanchat setting create settingName <message>
+                            String message = "";
+                            for (int i = 3; i < args.length; i++) {
+                                message = message + args[i] + " ";
+                            }
+
+                            message = message.trim();
+                            newList[newList.length - 1] = new ChatFilterSetting(message, MessageSource.UNKNOWN_ALL, true, args[2] + "(User-added filter)", args[2]);
+                            CleanChat.getChatHandler().getChatFilter().setSettings(newList);
+                            ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter setting added."));
+                            CleanChat.getChatHandler().saveChatFilter();
+                            ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter settings saved."));
+                        }
                     }
                 }
             }
@@ -57,34 +132,46 @@ public class CleanChatCommand extends CommandBase {
     }
 
     @Override //Do I need this override?
-    public int getRequiredPermissionLevel(){
+    public int getRequiredPermissionLevel() {
         return 0;
     }
 
     @Override //Do I need this override?
-    public List<String> addTabCompletionOptions(ICommandSender commandSender, String[] args, BlockPos pos){
-        if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, "list", "listAll", "listOff", "listOn");
+    public List<String> addTabCompletionOptions(ICommandSender commandSender, String[] args, BlockPos pos) {
+        //Does the "cleanchat" at the beginning of "/cleanchat <args...>" count as an arg here?
+        switch (args.length) {
+            case 1:
+                return getListOfStringsMatchingLastWord(args, "list", "listAll", "listOff", "listOn", "setting", "reload");
+            case 2: {
+                if (args[0].equalsIgnoreCase("setting")) {
+                    String[] oldList = CleanChat.getChatHandler().getChatFilter().getSettingNames();
+                    String[] newList = new String[oldList.length + 1];
+                    for (int i = 0; i < oldList.length; i++) {
+                        newList[i] = oldList[i];
+                    }
+                    newList[newList.length - 1] = "create";
+                    return getListOfStringsMatchingLastWord(args, newList);
+                } else {
+                    if (args[0].equalsIgnoreCase("list")) {
+                        return getListOfStringsMatchingLastWord(args, "all", "on", "off");
+                    }
+                }
+            }
+            case 3: {
+                if (args[0].equalsIgnoreCase("setting")) {
+                    if (args[1].equalsIgnoreCase("create")) {
+                        return getListOfStringsMatchingLastWord(args, "<settingName>");
+                    }
+                    return getListOfStringsMatchingLastWord(args, "on", "off", "toggle");
+                }
+            }
+            case 4: {
+                if (args[0].equalsIgnoreCase("setting")) {
+                    return getListOfStringsMatchingLastWord(args, "filteredWords...");
+                }
+            }
         }
         return null;
     }
 
-    /*CleanChatCommand() {
-        System.out.println("CleanChatCommand registered");
-    }*/
-
-    private static void displayTextMainMenu() {
-        //TODO: The main text menu is not defined correctly yet
-        Minecraft.getMinecraft().thePlayer.addChatComponentMessage(ChatMessageSender.getTextMainMenuHeader());
-    }
-
-    /**
-     * Lists the filter settings in chat
-     * @param listOn Show filter settings that are on if true
-     * @param listOff Show filter settings that are off if true
-     */
-    private static void listFilterSettings(boolean listOn, boolean listOff) {
-        //TODO: The .getConfirmReport() is a filler
-        Minecraft.getMinecraft().thePlayer.addChatComponentMessage(ChatMessageSender.getConfirmReport());
-    }
 }

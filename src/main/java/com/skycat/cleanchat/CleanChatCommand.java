@@ -5,6 +5,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CleanChatCommand extends CommandBase {
@@ -86,11 +87,15 @@ public class CleanChatCommand extends CommandBase {
                                             ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule updated"));
                                         } else {
                                             if (args[2].equalsIgnoreCase("delete")) {
-
+                                                //TODO: Fix this not actually removing anything
+                                                CleanChat.getChatHandler().getChatFilter().getSettings().remove(setting);
+                                                ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule removed"));
                                             }
                                         }
                                     }
                                 }
+                                //Could probably be moved elsewhere for slightly better performance.
+                                CleanChat.getChatHandler().loadChatFilter();
                             } else {
                                 //Should never happen
                                 ChatMessageSender.sendMessageToPlayer(new ChatComponentText("That's strange. You entered a valid name, but CleanChat couldn't find the related setting. Feel free to report this to the developer."));
@@ -106,11 +111,7 @@ public class CleanChatCommand extends CommandBase {
 
                         //Create a filter
                         if (args[1].equalsIgnoreCase("create")) {
-                            ChatFilterSetting[] oldList = CleanChat.getChatHandler().getChatFilter().getSettings();
-                            ChatFilterSetting[] newList = new ChatFilterSetting[oldList.length];
-                            for (int i = 0; i < oldList.length; i++) {
-                                newList[i] = oldList[i];
-                            }
+                            ArrayList<ChatFilterSetting> settings = CleanChat.getChatHandler().getChatFilter().getSettings();
 
                             // /cleanchat setting create settingName <message>
                             String message = "";
@@ -119,8 +120,7 @@ public class CleanChatCommand extends CommandBase {
                             }
 
                             message = message.trim();
-                            newList[newList.length - 1] = new ChatFilterSetting(message, MessageSource.UNKNOWN_ALL, true, args[2] + "(User-added filter)", args[2]);
-                            CleanChat.getChatHandler().getChatFilter().setSettings(newList);
+                            settings.add(new ChatFilterSetting(message, MessageSource.UNKNOWN_ALL, true, args[2] + "(User-added filter)", args[2]));
                             ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter setting added."));
                             CleanChat.getChatHandler().saveChatFilter();
                             ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter settings saved."));

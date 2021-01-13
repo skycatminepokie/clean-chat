@@ -46,6 +46,8 @@ public class ChatFilterSetting {
         return Pattern.compile(".*?" + message + ".*");
     }
 
+
+
     public boolean isMessageAllowed(String message, MessageSource messageSource) {
         //To match ranked player messages? (hopefully?): "\\[.*?\\] (?'username'.*?): .*?" + message + ".*"
         if ((messageSource == this.messageSource)||(messageSource == UNKNOWN_ALL)) {

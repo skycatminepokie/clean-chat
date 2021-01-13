@@ -3,10 +3,13 @@ package com.skycat.cleanchat;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 public class ChatFilter {
     private boolean enabled;
+
     @Getter @Setter
-    private ChatFilterSetting[] settings;
+    private ArrayList<ChatFilterSetting> settings;
 
     /**
      * Create a ChatFilter. It's probably only necessary to create one.
@@ -16,7 +19,7 @@ public class ChatFilter {
         this.enabled = enabled;
     }
 
-    ChatFilter(boolean enabled, ChatFilterSetting[] settings) {
+    ChatFilter(boolean enabled, ArrayList<ChatFilterSetting> settings) {
         this.enabled = enabled;
         this.settings = settings;
     }
@@ -35,9 +38,9 @@ public class ChatFilter {
     }
 
     public String[] getSettingNames() {
-        String[] shortNames = new String[settings.length];
+        String[] shortNames = new String[settings.size()];
         for (int i = 0; i < shortNames.length; i++) {
-            shortNames[i] = settings[i].getName();
+            shortNames[i] = settings.get(i).getName();
         }
         return shortNames;
     }
@@ -50,5 +53,13 @@ public class ChatFilter {
     /*public boolean deleteSetting(ChatFilterSetting setting) {
 
     }*/
+
+    /**
+     * Make sure that all nullable variables are initialized
+     * @return True if none are null, false if one or more is null
+     */
+    public boolean isFullyCreated() {
+        return (settings != null);
+    }
 
 }

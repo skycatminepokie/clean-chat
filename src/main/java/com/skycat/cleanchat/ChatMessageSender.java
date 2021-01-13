@@ -9,6 +9,8 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
+import java.util.ArrayList;
+
 /**
  * A class containing chat message and parts of chat messages that the mod displays.
  * @author skycatminepokie
@@ -57,7 +59,7 @@ public class ChatMessageSender {
      * @param listOff Show filter settings that are off
      */
     public static void listFilterSettings(boolean listOn, boolean listOff) {
-        ChatFilterSetting[] settings = CleanChat.getChatHandler().getChatFilter().getSettings();
+        ArrayList<ChatFilterSetting> settings = CleanChat.getChatHandler().getChatFilter().getSettings();
         for (ChatFilterSetting setting: settings) {
             if (listOn && setting.isEnabled()) {
                 sendMessageToPlayer(cleanChatTag.createCopy().appendSibling(new ChatComponentText(setting.getDescription())).setChatStyle(FILTER_ENABLED.createDeepCopy().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cleanchat setting " + setting.getName() + " toggle"))));

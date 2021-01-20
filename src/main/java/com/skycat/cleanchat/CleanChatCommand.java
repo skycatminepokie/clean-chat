@@ -92,13 +92,14 @@ public class CleanChatCommand extends CommandBase {
                                                 System.out.println("Setting successfully removed: " + CleanChat.getChatHandler().getChatFilter().getSettings().remove(setting));
                                                 ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule removed"));
                                                 //DEBUG
-                                                System.out.println("Removed " + setting.getName());
+                                                /*System.out.println("Removed " + setting.getName());
                                                 for (ChatFilterSetting s: CleanChat.getChatHandler().getChatFilter().getSettings()) {
                                                     System.out.println("Setting: " + s.getName());
                                                 }
                                                 for (String s: CleanChat.getChatHandler().getChatFilter().getSettingNames()) {
                                                     System.out.println("Setting: " + s);
                                                 }
+                                                 */
                                             }
                                         }
                                     }
@@ -124,12 +125,33 @@ public class CleanChatCommand extends CommandBase {
 
                             // /cleanchat setting create settingName <message>
                             String message = "";
+                            String replacementMessage = "";
+                            boolean useReplacement = false;
                             for (int i = 3; i < args.length; i++) {
-                                message = message + args[i] + " ";
+                                // Detects if a flag was specified
+                                if (!args[i].startsWith("--")) {
+                                    message = message + args[i] + " ";
+                                } else {
+                                    if (args[i].equalsIgnoreCase("--replacement")) {
+                                        try {
+                                            replacementMessage = replacementMessage + args[i + 1] + " ";
+                                            useReplacement = true;
+                                            i++; // Skip the next argument, it's already been dealt with
+                                        } catch (ArrayIndexOutOfBoundsException e) {
+                                            ChatMessageSender.sendMessageToPlayer(new ChatComponentText("It looks like you didn't specify replacement text after the --replacement flag. Please try again."));
+                                        }
+                                    }
+                                }
                             }
 
                             message = message.trim();
-                            settings.add(new ChatFilterSetting(message, MessageSource.UNKNOWN_ALL, true, args[2] + "(User-added filter)", args[2]));
+
+                            if (useReplacement) {
+                                settings.add(new ChatFilterSetting(message, MessageSource.UNKNOWN_ALL, true, args[2] + " (User-added filter)", args[2], replacementMessage.trim()));
+                            } else {
+                                settings.add(new ChatFilterSetting(message, MessageSource.UNKNOWN_ALL, true, args[2] + " (User-added filter)", args[2]));
+                            }
+
                             ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter setting added."));
                             CleanChat.getChatHandler().saveChatFilter();
                             ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter settings saved."));

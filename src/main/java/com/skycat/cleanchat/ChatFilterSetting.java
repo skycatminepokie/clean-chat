@@ -14,10 +14,12 @@ import static com.skycat.cleanchat.MessageSource.UNKNOWN_ALL;
  */
 public class ChatFilterSetting {
     private final Pattern regex;
+    @Getter private String message;
     @Getter @Setter private boolean enabled; //getter is isEnabled, not getEnabled. Why? IDK, Lombok magic.
     private final MessageSource messageSource;
     @Getter private final String description;
     @Getter private String name;
+    @Getter private String replacement = null;
 
     //TODO: Allow multiple strings
     /**
@@ -29,12 +31,36 @@ public class ChatFilterSetting {
      * @param name A short, human-readable name used in commands. No spaces allowed.
      */
     ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name) {
+        this.message = message;
         this.regex = generateRegex(message);
         this.messageSource = messageSource;
         this.enabled = enabled;
         this.description = description;
         this.name = name;
     }
+
+
+    /**
+     * Creates a ChatFilterSetting that allows for replacing content in the chat
+     * rather than removing the chat
+     * @param message The message to match (also matches partially)
+     * @param messageSource Where the message usually comes from
+     * @param enabled Enabled the filter setting
+     * @param description A human-readable description of the setting (for example, "Player join message (lobby)")
+     * @param name A short, human-readable name used in commands. No spaces allowed.
+     * @param replacement The string to use as a replacement for the message
+     * @see ChatFilter
+     */
+    ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name, String replacement) {
+        this.message = message;
+        this.regex = generateRegex(message);
+        this.messageSource = messageSource;
+        this.enabled = enabled;
+        this.description = description;
+        this.name = name;
+        this.replacement = replacement;
+    }
+
 
     /**
      * Creates a regex to help capture parts of the message

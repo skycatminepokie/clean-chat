@@ -2,6 +2,7 @@ package com.skycat.cleanchat;
 
 import com.google.gson.Gson;
 import lombok.Getter;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -30,7 +31,9 @@ public class ChatHandler {
                 new ChatFilterSetting("party me", PLAYER, true, "Ad (party me)", "partyAd"),
                 new ChatFilterSetting("Your Spirit Sceptre hit ", SERVER, true, "Spirit Sceptre damage message", "spiritSceptre"),
                 new ChatFilterSetting("§f §6sled into the lobby!", SERVER, true, "Lobby join (Holidays)", "lobbyJoinHolidays"),
-                new ChatFilterSetting(" has obtained Superboom TNT!", SERVER, true, "Teammate found Superboom TNT", "teammateFoundSuperboom")
+                new ChatFilterSetting(" has obtained Superboom TNT!", SERVER, true, "Teammate found Superboom TNT", "teammateFoundSuperboom"),
+                new ChatFilterSetting("lamo", PLAYER, true, "Lamo to Lol", "lamoToLol", "lol"),
+                new ChatFilterSetting("lmao", PLAYER, true, "Lmao to Lol", "lmaoToLol", "lol")
                 //new ChatFilterSetting("[WATCHDOG ANNOUNCEMENT]", SERVER, false, "Watchdog announcement header"),
                 //new ChatFilterSetting("Watchdog has banned.* players in the last 7 days.", SERVER, false, "Watchdog ban 7 days"),
                 //new ChatFilterSetting("Staff have banned an additional .* in the last 7 days.", SERVER, false, "Staff ban 7 days"),
@@ -44,10 +47,15 @@ public class ChatHandler {
     @SubscribeEvent
     public void onChatMessageReceived(ClientChatReceivedEvent event) {
         if (!(chatFilter.isMessageAllowed(event.message.getUnformattedText(), UNKNOWN_ALL))) {
-            //If the message is blocked
-            event.setCanceled(true);
-            messagesRemoved++;
-            System.out.println("Removed a message.");
+            //If the message is blocked or modified
+            String modifiedMessage = chatFilter.modifyChatMessage(event.message.getFormattedText());
+            if (modifiedMessage.equals(event.message.getFormattedText())) {
+                event.setCanceled(true);
+                messagesRemoved++;
+                System.out.println("Removed a message.");
+            } else {
+                event.message = new ChatComponentText(modifiedMessage);
+            }
         }
     }
 

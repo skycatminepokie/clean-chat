@@ -62,4 +62,12 @@ public class ChatFilter {
         return (settings != null);
     }
 
+    public String modifyChatMessage(String msg) {
+        for (ChatFilterSetting s: settings) {
+            if (s.getReplacement() != null) {
+                msg = msg.replace(s.getMessage(), s.getReplacement());
+            }
+        }
+        return msg;
+    }
 }

@@ -20,6 +20,7 @@ public class CleanChatCommand extends CommandBase {
 
     @Override //Do I need this override?
     public String getCommandUsage(ICommandSender sender) {
+        //TODO: Does this go in lang files?
         return "The cleanchat command does stuff (this is for debug)";
     }
 
@@ -170,7 +171,7 @@ public class CleanChatCommand extends CommandBase {
                     if (args[1].equalsIgnoreCase("create")) {
                         return getListOfStringsMatchingLastWord(args, "<settingName>");
                     }
-                    return getListOfStringsMatchingLastWord(args, "on", "off", "toggle");
+                    return getListOfStringsMatchingLastWord(args, "on", "off", "toggle", "delete");
                 }
             }
             case 4: {

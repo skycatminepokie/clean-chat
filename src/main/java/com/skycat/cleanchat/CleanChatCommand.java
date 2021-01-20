@@ -87,15 +87,23 @@ public class CleanChatCommand extends CommandBase {
                                             ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule updated"));
                                         } else {
                                             if (args[2].equalsIgnoreCase("delete")) {
-                                                //TODO: Fix this not actually removing anything
-                                                CleanChat.getChatHandler().getChatFilter().getSettings().remove(setting);
+                                                System.out.println("Setting exists?: " + CleanChat.getChatHandler().getChatFilter().getSettings().contains(setting));
+                                                System.out.println("Setting successfully removed: " + CleanChat.getChatHandler().getChatFilter().getSettings().remove(setting));
                                                 ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule removed"));
+                                                //DEBUG
+                                                System.out.println("Removed " + setting.getName());
+                                                for (ChatFilterSetting s: CleanChat.getChatHandler().getChatFilter().getSettings()) {
+                                                    System.out.println("Setting: " + s.getName());
+                                                }
+                                                for (String s: CleanChat.getChatHandler().getChatFilter().getSettingNames()) {
+                                                    System.out.println("Setting: " + s);
+                                                }
                                             }
                                         }
                                     }
                                 }
                                 //Could probably be moved elsewhere for slightly better performance.
-                                CleanChat.getChatHandler().loadChatFilter();
+                                CleanChat.getChatHandler().saveChatFilter();
                             } else {
                                 //Should never happen
                                 ChatMessageSender.sendMessageToPlayer(new ChatComponentText("That's strange. You entered a valid name, but CleanChat couldn't find the related setting. Feel free to report this to the developer."));

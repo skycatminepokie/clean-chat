@@ -30,8 +30,7 @@ public class ChatHandler {
                 new ChatFilterSetting("party me", PLAYER, true, "Ad (party me)", "partyAd"),
                 new ChatFilterSetting("Your Spirit Sceptre hit ", SERVER, true, "Spirit Sceptre damage message", "spiritSceptre"),
                 new ChatFilterSetting("§f §6sled into the lobby!", SERVER, true, "Lobby join (Holidays)", "lobbyJoinHolidays"),
-                new ChatFilterSetting(" has obtained Superboom TNT!", SERVER, true, "Teammate found Superboom TNT", "teammateFoundSuperboom"),
-                new ChatFilterSetting("potato!", UNKNOWN_ALL, true, "potato test", "potatoTest")
+                new ChatFilterSetting(" has obtained Superboom TNT!", SERVER, true, "Teammate found Superboom TNT", "teammateFoundSuperboom")
                 //new ChatFilterSetting("[WATCHDOG ANNOUNCEMENT]", SERVER, false, "Watchdog announcement header"),
                 //new ChatFilterSetting("Watchdog has banned.* players in the last 7 days.", SERVER, false, "Watchdog ban 7 days"),
                 //new ChatFilterSetting("Staff have banned an additional .* in the last 7 days.", SERVER, false, "Staff ban 7 days"),

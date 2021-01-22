@@ -20,6 +20,8 @@ public class ChatFilterSetting {
     @Getter private final String description;
     @Getter private String name;
     @Getter private String replacement = null;
+    @Getter private ChatFilterSettingFlag[] flags;
+    private String[] flagValues;
 
     //TODO: Allow multiple strings
     /**
@@ -61,6 +63,29 @@ public class ChatFilterSetting {
         this.replacement = replacement;
     }
 
+    /**
+     * Creates an advanced ChatFilterSetting, complete with flags
+     * @param message The criteria to match
+     * @param messageSource The typical source of the message
+     * @param enabled If the setting is enabled
+     * @param description A short, human-readable description of the setting
+     * @param name A short, human-readable, one-word name for use in commands. May not contain "--".
+     * @param flagValues The values for flags that need them, in order.
+     * @param flags All flags to trip on the setting
+     * @see ChatFilter
+     * @see ChatFilterSettingFlag
+     */
+    ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name, String[] flagValues, ChatFilterSettingFlag... flags) {
+        this.message = message;
+        this.regex = generateRegex(message);
+        this.messageSource = messageSource;
+        this.enabled = enabled;
+        this.description = description;
+        this.name = name;
+        this.flags = flags;
+        this.flagValues = flagValues;
+    }
+
 
     /**
      * Creates a regex to help capture parts of the message
@@ -76,6 +101,7 @@ public class ChatFilterSetting {
 
     public boolean isMessageAllowed(String message, MessageSource messageSource) {
         //To match ranked player messages? (hopefully?): "\\[.*?\\] (?'username'.*?): .*?" + message + ".*"
+        //TODO: Work with extra flag values
         if ((messageSource == this.messageSource)||(messageSource == UNKNOWN_ALL)) {
             return !(regex.matcher(message).matches() && this.enabled);
         }

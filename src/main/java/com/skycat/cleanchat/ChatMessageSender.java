@@ -35,10 +35,11 @@ public class ChatMessageSender {
 
     public static void displayTextMainMenu() {
         sendMessageToPlayer(textMainMenuHeader);
-        //for(int i = 0; i < mainMenuCommandSuggestions.length; i++) {
-        //    //TODO: Clean this up.
-        //    sendMessageToPlayer(formatForMenuClickable(mainMenuCommandSuggestions[i]).appendSibling(new ChatComponentText(mainMenuCommandDescriptions[i]).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.WHITE))));
-        //}
+        sendMessageToPlayer(new ChatComponentText("Welcome to CleanChat! Use /cleanchat list to see all your filters."));
+        sendMessageToPlayer(new ChatComponentText("Use /cleanchat setting create to start creating your own filters."));
+        sendMessageToPlayer(new ChatComponentText("Created by skycatminepokie (skycatminepokie#3711)"));
+        sendMessageToPlayer(new ChatComponentText("Feel free to contact me in game with questions or suggestions!"));
+        sendMessageToPlayer(new ChatComponentText("Credits").setChatStyle(new ChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/skycatminepokie/clean-chat/blob/ac5a66646c3a0c1f340d173b0d9b63304c427f4d/CleanChatCredits")).setUnderlined(true).setColor(EnumChatFormatting.BLUE)));
     }
 
     /**

@@ -45,14 +45,6 @@ public class ChatFilter {
         return shortNames;
     }
 
-    /**
-     * Deletes a setting from the list of settings
-     * @param setting The setting to delete
-     * @return True if the setting was removed, otherwise returns false.
-     */
-    /*public boolean deleteSetting(ChatFilterSetting setting) {
-
-    }*/
 
     /**
      * Make sure that all nullable variables are initialized

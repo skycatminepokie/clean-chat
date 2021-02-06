@@ -9,7 +9,7 @@ public enum ChatFilterSettingFlag {
     REPLACEMENT,
     WHITELIST,
     REMOVE_FORMATTING,
-    TEMPORARY, // (Don't save for future games)
+    TEMPORARY, // (Don't save for future launches)
     BYPASS_WHITELIST,
     REGEX,
     MATCH_COLOR,

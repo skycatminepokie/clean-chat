@@ -6,13 +6,13 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-//What's the "static" mean here?
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//What's the "static" mean here?
 import static com.skycat.cleanchat.MessageSource.*;
 
 public class ChatHandler {
@@ -32,8 +32,18 @@ public class ChatHandler {
                 new ChatFilterSetting("Your Spirit Sceptre hit ", SERVER, true, "Spirit Sceptre damage message", "spiritSceptre"),
                 new ChatFilterSetting("§f §6sled into the lobby!", SERVER, true, "Lobby join (Holidays)", "lobbyJoinHolidays"),
                 new ChatFilterSetting(" has obtained Superboom TNT!", SERVER, true, "Teammate found Superboom TNT", "teammateFoundSuperboom"),
-                new ChatFilterSetting("lamo", PLAYER, true, "Lamo to Lol", "lamoToLol", "lol"),
-                new ChatFilterSetting("lmao", PLAYER, true, "Lmao to Lol", "lmaoToLol", "lol")
+                new ChatFilterSetting(">>>>", PLAYER, true, "Ad", "rightChevronAd"),
+                new ChatFilterSetting("<<<<", PLAYER, true, "Ad", "leftChevronAd"),
+                new ChatFilterSetting("[!]", PLAYER, true, "Ad", "exclaimAd"),
+                new ChatFilterSetting("coins fast", PLAYER, true, "Get coins fast scam", "fastCoinScam"),
+                new ChatFilterSetting("ending soon", PLAYER, true, "ending soon", "lmaoToLol", "lol"),
+                new ChatFilterSetting("go quick", PLAYER, true, "go quick", "goQuick"),
+                new ChatFilterSetting("bid", PLAYER, true, "bid", "bidAd"),
+                new ChatFilterSetting("flex", PLAYER, false, "flex", "flex", "flapjacks"),
+                new ChatFilterSetting("Your personality shines brighter than the sun!", PLAYER, false, "EZ Personality", "ezPersonality", "Stop! Hammer time."),
+                new ChatFilterSetting("Does anybody else really like Rick Ashley?", PLAYER, false, "EZ Rick", "ezRick", "Does anybody else really like french fries?"),
+                new ChatFilterSetting("Pineapple doesn't go on pizza!", PLAYER, false, "Pineapple pizza truth", "pineappleGoesOnPizza", "Pineapple goes on pizza!")
+
                 //new ChatFilterSetting("[WATCHDOG ANNOUNCEMENT]", SERVER, false, "Watchdog announcement header"),
                 //new ChatFilterSetting("Watchdog has banned.* players in the last 7 days.", SERVER, false, "Watchdog ban 7 days"),
                 //new ChatFilterSetting("Staff have banned an additional .* in the last 7 days.", SERVER, false, "Staff ban 7 days"),

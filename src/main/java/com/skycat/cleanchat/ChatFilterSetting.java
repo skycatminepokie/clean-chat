@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.util.regex.Pattern;
 
+import static com.skycat.cleanchat.MessageSource.PLAYER;
 import static com.skycat.cleanchat.MessageSource.UNKNOWN_ALL;
 
 //What does static mean in an import?
@@ -34,7 +35,7 @@ public class ChatFilterSetting {
      */
     ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name) {
         this.message = message;
-        this.regex = generateRegex(message);
+        this.regex = generateRegex(message, messageSource);
         this.messageSource = messageSource;
         this.enabled = enabled;
         this.description = description;
@@ -55,7 +56,7 @@ public class ChatFilterSetting {
      */
     ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name, String replacement) {
         this.message = message;
-        this.regex = generateRegex(message);
+        this.regex = generateRegex(message, messageSource);
         this.messageSource = messageSource;
         this.enabled = enabled;
         this.description = description;
@@ -70,15 +71,15 @@ public class ChatFilterSetting {
      * @param enabled If the setting is enabled
      * @param description A short, human-readable description of the setting
      * @param name A short, human-readable, one-word name for use in commands. May not contain "--".
-     * @param flagValues The values for flags that need them, in order.
+     * @param flagValues The values for flags that need them, in order (for example, a replacement string for the REPLACEMENT value
      * @param flags All flags to trip on the setting
      * @see ChatFilter
      * @see ChatFilterSettingFlag
      */
     ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name, String[] flagValues, ChatFilterSettingFlag... flags) {
         this.message = message;
-        this.regex = generateRegex(message);
         this.messageSource = messageSource;
+        this.regex = generateRegex(message, messageSource);
         this.enabled = enabled;
         this.description = description;
         this.name = name;
@@ -92,9 +93,14 @@ public class ChatFilterSetting {
      * @param message The base message to match (or partially match)
      * @return A {@link Pattern} containing the generated regex
      */
-    private static Pattern generateRegex(String message) {
+    private static Pattern generateRegex(String message, MessageSource messageSource) {
         //TODO Work with capturing and recording username
-        return Pattern.compile(".*?" + message + ".*");
+        if (messageSource == PLAYER) {
+            // Can be improved. Just looks for a colon before the message
+            return Pattern.compile(".*?:.*?" + message + ".*");
+        } else {
+            return Pattern.compile(".*?" + message + ".*");
+        }
     }
 
 

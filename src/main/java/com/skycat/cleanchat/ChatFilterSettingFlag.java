@@ -16,5 +16,6 @@ public enum ChatFilterSettingFlag {
     ONLY_ON_HYPIXEL, // Not exclusive, just notes that other, non-specified places should be ignored
     ONLY_ON_SKYBLOCK, // Not exclusive, just notes that other, non-specified places should be ignored
     STRICT, // Assumed
-    SMART
+    SMART,
+    ONLY_AFTER_COLON // Tries to match players only
 }

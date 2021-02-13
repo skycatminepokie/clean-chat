@@ -3,6 +3,8 @@ package com.skycat.cleanchat;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static com.skycat.cleanchat.MessageSource.PLAYER;
@@ -23,6 +25,7 @@ public class ChatFilterSetting {
     @Getter private String replacement = null;
     @Getter private ChatFilterSettingFlag[] flags;
     private String[] flagValues;
+    @Getter private ArrayList<ChatFilterSettingFlag> flagList;
 
     //TODO: Allow multiple strings
     /**
@@ -35,7 +38,7 @@ public class ChatFilterSetting {
      */
     ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name) {
         this.message = message;
-        this.regex = generateRegex(message, messageSource);
+        this.regex = generateRegex();
         this.messageSource = messageSource;
         this.enabled = enabled;
         this.description = description;
@@ -56,7 +59,7 @@ public class ChatFilterSetting {
      */
     ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name, String replacement) {
         this.message = message;
-        this.regex = generateRegex(message, messageSource);
+        this.regex = generateRegex();
         this.messageSource = messageSource;
         this.enabled = enabled;
         this.description = description;
@@ -79,27 +82,43 @@ public class ChatFilterSetting {
     ChatFilterSetting(String message, MessageSource messageSource, boolean enabled, String description, String name, String[] flagValues, ChatFilterSettingFlag... flags) {
         this.message = message;
         this.messageSource = messageSource;
-        this.regex = generateRegex(message, messageSource);
         this.enabled = enabled;
         this.description = description;
         this.name = name;
+        ArrayList<ChatFilterSettingFlag> flagList = new ArrayList<ChatFilterSettingFlag>();
+        flagList.addAll(Arrays.asList(flags));
+        this.flagList = flagList;
         this.flags = flags;
         this.flagValues = flagValues;
+        this.regex = generateRegex();
     }
 
 
     /**
      * Creates a regex to help capture parts of the message
-     * @param message The base message to match (or partially match)
      * @return A {@link Pattern} containing the generated regex
      */
-    private static Pattern generateRegex(String message, MessageSource messageSource) {
-        //TODO Work with capturing and recording username
-        if (messageSource == PLAYER) {
-            // Can be improved. Just looks for a colon before the message
-            return Pattern.compile(".*?:.*?" + message + ".*");
+    private Pattern generateRegex() {
+        String regexMessage = message;
+
+        if (flagList.contains(ChatFilterSettingFlag.CASE_INSENSITIVE)) {
+            regexMessage = regexMessage.toLowerCase();
+        }
+
+        if (flagList.contains(ChatFilterSettingFlag.WHOLE_MESSAGE_ONLY)) {
+            return Pattern.compile(regexMessage);
         } else {
-            return Pattern.compile(".*?" + message + ".*");
+            if (flagList.contains(ChatFilterSettingFlag.WHOLE_WORD_ONLY)) {
+                // TODO: Fix this not working if it's the last word or before punctuation
+                regexMessage = " " + regexMessage + " "; // This won't work if it's the the last word :/
+                // Actual function is "must be surrounded with spaces" rather than "must be a whole word"
+            }
+            if (messageSource == PLAYER) {
+                // Can be improved. Just looks for a colon before the message
+                return Pattern.compile(".*?:.*?" + regexMessage + ".*");
+            } else {
+                return Pattern.compile(".*?" + regexMessage + ".*");
+            }
         }
     }
 
@@ -112,5 +131,26 @@ public class ChatFilterSetting {
             return !(regex.matcher(message).matches() && this.enabled);
         }
         return true;
+    }
+
+    public boolean isMessageAllowed(String msg) {
+        /*
+            The order in which flags should be evaluated:
+            Only on server
+            Case sensitivity
+            Whole message
+            Whole word
+            Smart?
+            Whitelist
+        */
+        boolean letMessagePass = true;
+
+        if (flagList.contains(ChatFilterSettingFlag.CASE_INSENSITIVE)) {
+            msg = msg.toLowerCase();
+        }
+
+        letMessagePass = !(regex.matcher(msg).matches() && this.enabled);
+
+        return letMessagePass;
     }
 }

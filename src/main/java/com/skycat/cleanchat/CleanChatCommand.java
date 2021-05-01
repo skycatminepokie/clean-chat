@@ -33,19 +33,18 @@ public class CleanChatCommand extends CommandBase {
             String firstArg = args[0].toLowerCase();
 
             if (firstArg.equalsIgnoreCase("reload")) {
-                CleanChat.getChatHandler().loadChatFilter();
+                //CleanChat.getChatHandler().loadChatFilter();
+                CleanChat.chatHandler.loadChatFilter();
                 ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Reloaded filter."));
             }
             if (firstArg.startsWith("list") || firstArg.equals("l")) {
                 //TODO: Fix the on/off specification not working
-                if (args.length >= 1) {
                     ChatMessageSender.listFilterSettings(
                             firstArg.endsWith("on") || firstArg.endsWith("all"),
                             firstArg.endsWith("off") || firstArg.endsWith("all"));
                     if (firstArg.equals("list") || firstArg.equals("l")) {
                         ChatMessageSender.listFilterSettings(true, true);
                     }
-                }
             } else {
 
                 if (args[0].equalsIgnoreCase("setting")) {
@@ -158,6 +157,11 @@ public class CleanChatCommand extends CommandBase {
                         }
                     }
                 }
+                else {
+                    if (args[0].equalsIgnoreCase("reset")) {
+                        CleanChat.setChatHandler(new ChatHandler());
+                    }
+                }
             }
         }
     }
@@ -169,7 +173,6 @@ public class CleanChatCommand extends CommandBase {
 
     @Override //Do I need this override?
     public List<String> addTabCompletionOptions(ICommandSender commandSender, String[] args, BlockPos pos) {
-        //Does the "cleanchat" at the beginning of "/cleanchat <args...>" count as an arg here?
         switch (args.length) {
             case 1:
                 return getListOfStringsMatchingLastWord(args, "list", "listAll", "listOff", "listOn", "setting", "reload");
@@ -177,9 +180,7 @@ public class CleanChatCommand extends CommandBase {
                 if (args[0].equalsIgnoreCase("setting")) {
                     String[] oldList = CleanChat.getChatHandler().getChatFilter().getSettingNames();
                     String[] newList = new String[oldList.length + 1];
-                    for (int i = 0; i < oldList.length; i++) {
-                        newList[i] = oldList[i];
-                    }
+                    System.arraycopy(oldList, 0, newList, 0, oldList.length);
                     newList[newList.length - 1] = "create";
                     return getListOfStringsMatchingLastWord(args, newList);
                 } else {

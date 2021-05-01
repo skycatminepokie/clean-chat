@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.skycat.cleanchat.MessageSource.PLAYER;
@@ -25,7 +27,7 @@ public class ChatFilterSetting {
     @Getter private String replacement = null;
     @Getter private ChatFilterSettingFlag[] flags;
     private String[] flagValues;
-    @Getter private ArrayList<ChatFilterSettingFlag> flagList;
+    @Getter private List<ChatFilterSettingFlag> flagList;
 
     //TODO: Allow multiple strings
     /**
@@ -85,7 +87,7 @@ public class ChatFilterSetting {
         this.enabled = enabled;
         this.description = description;
         this.name = name;
-        ArrayList<ChatFilterSettingFlag> flagList = new ArrayList<ChatFilterSettingFlag>();
+        List flagList = Collections.synchronizedList(new ArrayList<ChatFilterSettingFlag>());
         flagList.addAll(Arrays.asList(flags));
         this.flagList = flagList;
         this.flags = flags;
@@ -100,25 +102,25 @@ public class ChatFilterSetting {
      */
     private Pattern generateRegex() {
         String regexMessage = message;
-
-        if (flagList.contains(ChatFilterSettingFlag.CASE_INSENSITIVE)) {
-            regexMessage = regexMessage.toLowerCase();
+        if (flagList != null) {
+            if (flagList.contains(ChatFilterSettingFlag.CASE_INSENSITIVE)) {
+                regexMessage = regexMessage.toLowerCase();
+            }
+            if (flagList.contains(ChatFilterSettingFlag.WHOLE_MESSAGE_ONLY)) {
+                return Pattern.compile(regexMessage);
+            }
         }
-
-        if (flagList.contains(ChatFilterSettingFlag.WHOLE_MESSAGE_ONLY)) {
-            return Pattern.compile(regexMessage);
+        /*
+        if (flagList.contains(ChatFilterSettingFlag.WHOLE_WORD_ONLY)) {
+            // TODO: Fix this not working if it's the last word or before punctuation
+            regexMessage = " " + regexMessage + " "; // This won't work if it's the the last word :/
+            // Actual function is "must be surrounded with spaces" rather than "must be a whole word"
+        }*/
+        if (messageSource == PLAYER) {
+            // Can be improved. Just looks for a colon before the message
+            return Pattern.compile(".*?:.*?" + regexMessage + ".*");
         } else {
-            if (flagList.contains(ChatFilterSettingFlag.WHOLE_WORD_ONLY)) {
-                // TODO: Fix this not working if it's the last word or before punctuation
-                regexMessage = " " + regexMessage + " "; // This won't work if it's the the last word :/
-                // Actual function is "must be surrounded with spaces" rather than "must be a whole word"
-            }
-            if (messageSource == PLAYER) {
-                // Can be improved. Just looks for a colon before the message
-                return Pattern.compile(".*?:.*?" + regexMessage + ".*");
-            } else {
-                return Pattern.compile(".*?" + regexMessage + ".*");
-            }
+            return Pattern.compile(".*?" + regexMessage + ".*");
         }
     }
 

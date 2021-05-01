@@ -41,8 +41,15 @@ public class ChatHandler {
                 new ChatFilterSetting("bid", PLAYER, true, "bid", "bidAd"),
                 new ChatFilterSetting("flex", PLAYER, false, "flex", "flex", "flapjacks"),
                 new ChatFilterSetting("Your personality shines brighter than the sun!", PLAYER, false, "EZ Personality", "ezPersonality", "Stop! Hammer time."),
-                new ChatFilterSetting("Does anybody else really like Rick Ashley?", PLAYER, false, "EZ Rick", "ezRick", "Does anybody else really like french fries?"),
-                new ChatFilterSetting("Pineapple doesn't go on pizza!", PLAYER, false, "Pineapple pizza truth", "pineappleGoesOnPizza", "Pineapple goes on pizza!")
+                new ChatFilterSetting("Does anybody else really like Rick Astley?", PLAYER, false, "EZ Rick", "ezRick", "Does anybody else really like french fries?"),
+                new ChatFilterSetting("Pineapple doesn't go on pizza!", PLAYER, false, "Pineapple pizza truth", "pineappleGoesOnPizza", "Pineapple goes on pizza!"),
+                new ChatFilterSetting("wtf", PLAYER, true, "What the", "whatThe", "wot"),
+                new ChatFilterSetting("wth", PLAYER, true, "What the huh", "whatTheHuh", "wot"),
+                new ChatFilterSetting("Please wait a little before using that!", SERVER, false, "Please wait a little bit", "waitABit"),
+                new ChatFilterSetting(" §b>§c>§a>§r §6\\[MVP", SERVER, true, "MVP++ Lobby join", "mvpPlusPlusJoin"),
+                new ChatFilterSetting("teh", PLAYER, false, "teh to the (does not work)", "tehToThe", new String[] {"the"}, ChatFilterSettingFlag.REPLACEMENT, ChatFilterSettingFlag.WHOLE_WORD_ONLY),
+                new ChatFilterSetting("lamo", PLAYER, true , "lamo to lol", "lamoToLol", "lol"),
+                new ChatFilterSetting("lmao", PLAYER, true , "lmao to lol", "lmaoToLol", "lol")
 
                 //new ChatFilterSetting("[WATCHDOG ANNOUNCEMENT]", SERVER, false, "Watchdog announcement header"),
                 //new ChatFilterSetting("Watchdog has banned.* players in the last 7 days.", SERVER, false, "Watchdog ban 7 days"),
@@ -95,9 +102,16 @@ public class ChatHandler {
                 fileContents = fileContents + saveFile.nextLine();
             }
             ChatFilter newChatFilter = gson.fromJson(fileContents, ChatFilter.class);
-            if (newChatFilter.isFullyCreated()) {
+
+            while (true) {
+                // TODO: More efficient way to wait?
+                if (!newChatFilter.isFullyCreated()) {
+                    continue;
+                }
                 chatFilter = newChatFilter;
+                break;
             }
+
 
 
         } catch (IOException e) {

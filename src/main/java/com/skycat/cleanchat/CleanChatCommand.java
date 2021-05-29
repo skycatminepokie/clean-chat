@@ -63,10 +63,12 @@ public class CleanChatCommand extends CommandBase {
 
                         if (isValidName) {
                             ChatFilterSetting setting = null;
-                            for (ChatFilterSetting chatFilterSetting : CleanChat.getChatHandler().getChatFilter().getSettings()) {
-                                if (chatFilterSetting.getName().equalsIgnoreCase(args[1])) {
-                                    setting = chatFilterSetting;
-                                    break;
+                            for (ChatFilterSettingGroup chatFilterSettingGroup : CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
+                                for (ChatFilterSetting chatFilterSetting: chatFilterSettingGroup.getSettings()) {
+                                    if (chatFilterSetting.getName().equalsIgnoreCase(args[1])) {
+                                        setting = chatFilterSetting;
+                                        break;
+                                    }
                                 }
                             }
 
@@ -87,9 +89,27 @@ public class CleanChatCommand extends CommandBase {
                                             ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule updated"));
                                         } else {
                                             if (args[2].equalsIgnoreCase("delete")) {
-                                                System.out.println("Setting exists?: " + CleanChat.getChatHandler().getChatFilter().getSettings().contains(setting));
-                                                System.out.println("Setting successfully removed: " + CleanChat.getChatHandler().getChatFilter().getSettings().remove(setting));
-                                                ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule removed"));
+                                                boolean exists = false;
+                                                for (ChatFilterSettingGroup group: CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
+                                                    if (group.getSettings().contains(setting)) {
+                                                        exists = true;
+                                                        break;
+                                                    }
+                                                }
+                                                System.out.println("Setting exists?: " + exists);
+                                                boolean removed = false;
+                                                for (ChatFilterSettingGroup group: CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
+                                                    if (group.getSettings().contains(setting)) {
+                                                        removed = group.getSettings().remove(setting);
+                                                        break; // WARN This statement may cause problems if the same setting is put in multiple groups
+                                                    }
+                                                }
+                                                System.out.println("Setting successfully removed: " + removed);
+                                                if (removed) {
+                                                    ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("Rule removed"));
+                                                } else {
+                                                    ChatMessageSender.sendMessageToPlayer(ChatMessageSender.getCleanChatTag().createCopy().appendText("The rule wasn't removed correctly  :/"));
+                                                }
                                                 //DEBUG
                                                 /*System.out.println("Removed " + setting.getName());
                                                 for (ChatFilterSetting s: CleanChat.getChatHandler().getChatFilter().getSettings()) {
@@ -120,7 +140,11 @@ public class CleanChatCommand extends CommandBase {
 
                         //Create a filter
                         if (args[1].equalsIgnoreCase("create")) {
-                            ArrayList<ChatFilterSetting> settings = CleanChat.getChatHandler().getChatFilter().getSettings();
+                            ArrayList<ChatFilterSetting> settings = new ArrayList<ChatFilterSetting>();
+                            for (ChatFilterSettingGroup group: CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
+                                settings.addAll(group.getSettings());
+                            }
+
 
                             // /cleanchat setting create settingName <message>
                             String message = "";
@@ -160,6 +184,7 @@ public class CleanChatCommand extends CommandBase {
                 else {
                     if (args[0].equalsIgnoreCase("reset")) {
                         CleanChat.setChatHandler(new ChatHandler());
+                        ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter settings reset."));
                     }
                 }
             }

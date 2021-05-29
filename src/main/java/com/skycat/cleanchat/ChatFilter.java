@@ -9,7 +9,7 @@ public class ChatFilter {
     private boolean enabled;
 
     @Getter @Setter
-    private ArrayList<ChatFilterSetting> settings;
+    private ArrayList<ChatFilterSettingGroup> settingGroups;
 
     /**
      * Create a ChatFilter. It's probably only necessary to create one.
@@ -19,9 +19,9 @@ public class ChatFilter {
         this.enabled = enabled;
     }
 
-    ChatFilter(boolean enabled, ArrayList<ChatFilterSetting> settings) {
+    ChatFilter(boolean enabled, ArrayList<ChatFilterSettingGroup> settingGroups) {
         this.enabled = enabled;
-        this.settings = settings;
+        this.settingGroups = settingGroups;
     }
 
     public boolean isEnabled() {
@@ -29,19 +29,34 @@ public class ChatFilter {
     }
 
     public boolean isMessageAllowed(String message, MessageSource messageSource) {
-        for(ChatFilterSetting setting: settings) {
-            if (!setting.isMessageAllowed(message, messageSource)) {
-                return false;
+        for (ChatFilterSettingGroup group: settingGroups) {
+            if (group.isEnabled()) {
+                for(ChatFilterSetting setting: group.getSettings()) {
+                    if (!setting.isMessageAllowed(message, messageSource)) {
+                        return false;
+                    }
+                }
             }
+
         }
+
         return true;
     }
 
     public String[] getSettingNames() {
-        String[] shortNames = new String[settings.size()];
-        for (int i = 0; i < shortNames.length; i++) {
-            shortNames[i] = settings.get(i).getName();
+        int numberOfElements = 0;
+        for (ChatFilterSettingGroup group: settingGroups) {
+            numberOfElements += group.getSettings().size();
         }
+        String[] shortNames = new String[numberOfElements];
+        int i = 0;
+        for (ChatFilterSettingGroup group: settingGroups) {
+            for (ChatFilterSetting setting : group.getSettings()) {
+                shortNames[i] = setting.getName();
+                i++;
+            }
+        }
+
         return shortNames;
     }
 
@@ -51,13 +66,15 @@ public class ChatFilter {
      * @return True if none are null, false if one or more is null
      */
     public boolean isFullyCreated() {
-        return (settings != null);
+        return (settingGroups != null);
     }
 
     public String modifyChatMessage(String msg) {
-        for (ChatFilterSetting s: settings) {
-            if (s.getReplacement() != null) {
-                msg = msg.replace(s.getMessage(), s.getReplacement());
+        for (ChatFilterSettingGroup group: settingGroups) {
+            for (ChatFilterSetting setting: group.getSettings()) {
+                if (setting.getReplacement() != null) {
+                    msg = msg.replace(setting.getMessage(), setting.getReplacement());
+                }
             }
         }
         return msg;

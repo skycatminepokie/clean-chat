@@ -60,7 +60,11 @@ public class ChatMessageSender {
      * @param listOff Show filter settings that are off
      */
     public static void listFilterSettings(boolean listOn, boolean listOff) {
-        ArrayList<ChatFilterSetting> settings = CleanChat.getChatHandler().getChatFilter().getSettings();
+        // FIXME Test this
+        ArrayList<ChatFilterSetting> settings = new ArrayList<ChatFilterSetting>();
+        for (ChatFilterSettingGroup group : CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
+            settings.addAll(group.getSettings());
+        }
         for (ChatFilterSetting setting: settings) {
             if (listOn && setting.isEnabled()) {
                 sendMessageToPlayer(cleanChatTag.createCopy().appendSibling(new ChatComponentText(setting.getDescription())).setChatStyle(FILTER_ENABLED.createDeepCopy().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cleanchat setting " + setting.getName() + " toggle"))));

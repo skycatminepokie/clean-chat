@@ -42,11 +42,6 @@ minecraft {
 }
 
 dependencies {
-    repositories {
-        maven {
-            url = "https://repo.sk1er.club/repository/maven-public"
-        }
-    }
 
     implementation 'org.projectlombok:lombok:1.18.16'
     compileOnly 'org.projectlombok:lombok:1.18.18'
@@ -60,7 +55,6 @@ dependencies {
     //compile "some.group:artifact:version"
 
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation "club.sk1er:Elementa:129-10809-SNAPSHOT"
 
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env

@@ -20,7 +20,16 @@ public class OpenGuiCommand extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        CleanChat.getGuiHandler().setDrawTestGui(!CleanChat.getGuiHandler().isDrawTestGui());
+        if (args.length == 2) {
+            if (args[1].equalsIgnoreCase("test")) {
+                CleanChat.getGuiHandler().setDrawTestGui(true);
+            } else {
+                if (args[1].equalsIgnoreCase("main")) {
+                    CleanChat.getGuiHandler().setDrawMainGui(true);
+                }
+            }
+        }
+
     }
 
     @Override

@@ -12,7 +12,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//What's the "static" mean here?
 import static com.skycat.cleanchat.MessageSource.*;
 
 public class ChatHandler {
@@ -38,8 +37,8 @@ public class ChatHandler {
         chatFilterSettingGroups.add(new ChatFilterSettingGroup(true, "Profanity Filter",
                 new ChatFilterSetting("wtf", PLAYER, true, "What the", "whatThe", "wot"),
                 new ChatFilterSetting("wth", PLAYER, true, "What the huh", "whatTheHuh", "wot"),
-                new ChatFilterSetting("lamo", PLAYER, true , "lamo to lol", "lamoToLol", "lol"),
-                new ChatFilterSetting("lmao", PLAYER, true , "lmao to lol", "lmaoToLol", "lol")));
+                new ChatFilterSetting("lamo", PLAYER, true, "lamo to lol", "lamoToLol", "lol"),
+                new ChatFilterSetting("lmao", PLAYER, true, "lmao to lol", "lmaoToLol", "lol")));
 
         chatFilterSettingGroups.add(new ChatFilterSettingGroup(true, "Annoyances",
                 new ChatFilterSetting("Your Spirit Sceptre hit ", SERVER, true, "Spirit Sceptre damage message", "spiritSceptre"),
@@ -48,19 +47,19 @@ public class ChatHandler {
                 new ChatFilterSetting("flex", PLAYER, false, "flex", "flex", "flapjacks"),
                 new ChatFilterSetting("Please wait a little before using that!", SERVER, false, "Please wait a little bit", "waitABit"),
                 new ChatFilterSetting(" §b>§c>§a>§r §6\\[MVP", SERVER, true, "MVP++ Lobby join", "mvpPlusPlusJoin"),
-                new ChatFilterSetting("teh", PLAYER, false, "teh to the (does not work)", "tehToThe", new String[] {"the"}, ChatFilterSettingFlag.REPLACEMENT, ChatFilterSettingFlag.WHOLE_WORD_ONLY)
-                ));
+                new ChatFilterSetting("teh", PLAYER, false, "teh to the (does not work)", "tehToThe", new String[]{"the"}, ChatFilterSettingFlag.REPLACEMENT, ChatFilterSettingFlag.WHOLE_WORD_ONLY)
+        ));
 
         chatFilterSettingGroups.add(new ChatFilterSettingGroup(true, "Custom EZ",
                 new ChatFilterSetting("Your personality shines brighter than the sun!", PLAYER, false, "EZ Personality", "ezPersonality", "Stop! Hammer time."),
                 new ChatFilterSetting("Does anybody else really like Rick Astley?", PLAYER, false, "EZ Rick", "ezRick", "Does anybody else really like french fries?"),
                 new ChatFilterSetting("Pineapple doesn't go on pizza!", PLAYER, false, "Pineapple pizza truth", "pineappleGoesOnPizza", "Pineapple goes on pizza!")
-                ));
+        ));
 
-                //new ChatFilterSetting("[WATCHDOG ANNOUNCEMENT]", SERVER, false, "Watchdog announcement header"),
-                //new ChatFilterSetting("Watchdog has banned.* players in the last 7 days.", SERVER, false, "Watchdog ban 7 days"),
-                //new ChatFilterSetting("Staff have banned an additional .* in the last 7 days.", SERVER, false, "Staff ban 7 days"),
-                //new ChatFilterSetting("Blacklisted modifications are a bannable offense!", SERVER, false, "Blacklisted mods warning")
+        //new ChatFilterSetting("[WATCHDOG ANNOUNCEMENT]", SERVER, false, "Watchdog announcement header"),
+        //new ChatFilterSetting("Watchdog has banned.* players in the last 7 days.", SERVER, false, "Watchdog ban 7 days"),
+        //new ChatFilterSetting("Staff have banned an additional .* in the last 7 days.", SERVER, false, "Staff ban 7 days"),
+        //new ChatFilterSetting("Blacklisted modifications are a bannable offense!", SERVER, false, "Blacklisted mods warning")
     }
 
 
@@ -114,7 +113,6 @@ public class ChatHandler {
                 chatFilter = newChatFilter;
                 break;
             }
-
 
 
         } catch (IOException e) {

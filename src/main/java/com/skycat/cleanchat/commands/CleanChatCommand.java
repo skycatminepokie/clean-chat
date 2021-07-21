@@ -1,10 +1,11 @@
-package com.skycat.cleanchat;
+package com.skycat.cleanchat.commands;
 
-import com.skycat.cleanchat.gui.GuiHandler;
+import com.skycat.cleanchat.*;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,17 +36,17 @@ public class CleanChatCommand extends CommandBase {
 
             if (firstArg.equalsIgnoreCase("reload")) {
                 //CleanChat.getChatHandler().loadChatFilter();
-                CleanChat.chatHandler.loadChatFilter();
+                CleanChat.getChatHandler().loadChatFilter();
                 ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Reloaded filter."));
             }
             if (firstArg.startsWith("list") || firstArg.equals("l")) {
                 //TODO: Fix the on/off specification not working
-                    ChatMessageSender.listFilterSettings(
-                            firstArg.endsWith("on") || firstArg.endsWith("all"),
-                            firstArg.endsWith("off") || firstArg.endsWith("all"));
-                    if (firstArg.equals("list") || firstArg.equals("l")) {
-                        ChatMessageSender.listFilterSettings(true, true);
-                    }
+                ChatMessageSender.listFilterSettings(
+                        firstArg.endsWith("on") || firstArg.endsWith("all"),
+                        firstArg.endsWith("off") || firstArg.endsWith("all"));
+                if (firstArg.equals("list") || firstArg.equals("l")) {
+                    ChatMessageSender.listFilterSettings(true, true);
+                }
             } else {
 
                 if (args[0].equalsIgnoreCase("setting")) {
@@ -65,7 +66,7 @@ public class CleanChatCommand extends CommandBase {
                         if (isValidName) {
                             ChatFilterSetting setting = null;
                             for (ChatFilterSettingGroup chatFilterSettingGroup : CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
-                                for (ChatFilterSetting chatFilterSetting: chatFilterSettingGroup.getSettings()) {
+                                for (ChatFilterSetting chatFilterSetting : chatFilterSettingGroup.getSettings()) {
                                     if (chatFilterSetting.getName().equalsIgnoreCase(args[1])) {
                                         setting = chatFilterSetting;
                                         break;
@@ -91,7 +92,7 @@ public class CleanChatCommand extends CommandBase {
                                         } else {
                                             if (args[2].equalsIgnoreCase("delete")) {
                                                 boolean exists = false;
-                                                for (ChatFilterSettingGroup group: CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
+                                                for (ChatFilterSettingGroup group : CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
                                                     if (group.getSettings().contains(setting)) {
                                                         exists = true;
                                                         break;
@@ -99,7 +100,7 @@ public class CleanChatCommand extends CommandBase {
                                                 }
                                                 System.out.println("Setting exists?: " + exists);
                                                 boolean removed = false;
-                                                for (ChatFilterSettingGroup group: CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
+                                                for (ChatFilterSettingGroup group : CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
                                                     if (group.getSettings().contains(setting)) {
                                                         removed = group.getSettings().remove(setting);
                                                         break; // WARN This statement may cause problems if the same setting is put in multiple groups
@@ -142,7 +143,7 @@ public class CleanChatCommand extends CommandBase {
                         //Create a filter
                         if (args[1].equalsIgnoreCase("create")) {
                             ArrayList<ChatFilterSetting> settings = new ArrayList<ChatFilterSetting>();
-                            for (ChatFilterSettingGroup group: CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
+                            for (ChatFilterSettingGroup group : CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
                                 settings.addAll(group.getSettings());
                             }
 
@@ -181,8 +182,7 @@ public class CleanChatCommand extends CommandBase {
                             ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter settings saved."));
                         }
                     }
-                }
-                else {
+                } else {
                     if (args[0].equalsIgnoreCase("reset")) {
                         CleanChat.setChatHandler(new ChatHandler());
                         ChatMessageSender.sendMessageToPlayer(new ChatComponentText("Filter settings reset."));

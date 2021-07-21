@@ -1,6 +1,6 @@
 package com.skycat.cleanchat.gui;
 
-import com.skycat.cleanchat.*;
+import com.skycat.cleanchat.ChatFilterSetting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -8,7 +8,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import java.util.ArrayList;
 
 public class ChatFilterSettingsGui extends GuiScreen {
-    private ArrayList<ChatFilterSetting> settings;
+    private final ArrayList<ChatFilterSetting> settings;
 
     ChatFilterSettingsGui(ArrayList<ChatFilterSetting> settings) {
         this.settings = settings;

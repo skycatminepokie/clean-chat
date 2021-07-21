@@ -13,17 +13,21 @@ import java.util.ArrayList;
 
 /**
  * A class containing chat message and parts of chat messages that the mod displays.
+ *
  * @author skycatminepokie
  * @version 12/16/2020
  */
 
 //After a lot of struggling, i found out that .appendSibling is a mutator method, not just an algorithm.
-    //The lesson: MAKE COPIES BEFORE you append siblings to a reused ChatComponent
+//The lesson: MAKE COPIES BEFORE you append siblings to a reused ChatComponent
 
 public class ChatMessageSender {
-    @Getter private static final IChatComponent cleanChatTag = new ChatComponentText("[CleanChat] ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.WHITE));
-    @Getter private static final IChatComponent confirmReport = cleanChatTag.createCopy().appendSibling(new ChatComponentText("Confirm report?").setChatStyle(new ChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/report confirm"))));
-    @Getter private static final IChatComponent textMainMenuHeader = cleanChatTag.createCopy().appendSibling(new ChatComponentText("Main Menu").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.WHITE)));
+    @Getter
+    private static final IChatComponent cleanChatTag = new ChatComponentText("[CleanChat] ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.WHITE));
+    @Getter
+    private static final IChatComponent confirmReport = cleanChatTag.createCopy().appendSibling(new ChatComponentText("Confirm report?").setChatStyle(new ChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/report confirm"))));
+    @Getter
+    private static final IChatComponent textMainMenuHeader = cleanChatTag.createCopy().appendSibling(new ChatComponentText("Main Menu").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.WHITE)));
     private static final String[] mainMenuCommandSuggestions = {"list", "listOn", "listOff"};
     private static final String[] mainMenuCommandDescriptions = {
             ": Lists all available chat filter settings (l, listAll).",
@@ -44,9 +48,10 @@ public class ChatMessageSender {
 
     /**
      * Sends a message to the player. Makes it a bit easier than retyping it all the time.
+     *
      * @param message The message to send.
      */
-    public static void sendMessageToPlayer(IChatComponent message){
+    public static void sendMessageToPlayer(IChatComponent message) {
         Minecraft.getMinecraft().thePlayer.addChatComponentMessage(message);
     }
 
@@ -56,7 +61,8 @@ public class ChatMessageSender {
 
     /**
      * Displays a chat with a list of filter settings to the player
-     * @param listOn Show filter settings that are on
+     *
+     * @param listOn  Show filter settings that are on
      * @param listOff Show filter settings that are off
      */
     public static void listFilterSettings(boolean listOn, boolean listOff) {
@@ -65,11 +71,10 @@ public class ChatMessageSender {
         for (ChatFilterSettingGroup group : CleanChat.getChatHandler().getChatFilter().getSettingGroups()) {
             settings.addAll(group.getSettings());
         }
-        for (ChatFilterSetting setting: settings) {
+        for (ChatFilterSetting setting : settings) {
             if (listOn && setting.isEnabled()) {
                 sendMessageToPlayer(cleanChatTag.createCopy().appendSibling(new ChatComponentText(setting.getDescription())).setChatStyle(FILTER_ENABLED.createDeepCopy().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cleanchat setting " + setting.getName() + " toggle"))));
-            } else
-            if (listOff && !setting.isEnabled()) {
+            } else if (listOff && !setting.isEnabled()) {
                 sendMessageToPlayer(cleanChatTag.createCopy().appendSibling(new ChatComponentText(setting.getDescription())).setChatStyle(FILTER_DISABLED.createDeepCopy().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cleanchat setting " + setting.getName() + " toggle"))));
             }
         }

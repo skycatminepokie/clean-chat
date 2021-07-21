@@ -11,7 +11,8 @@ public class GuiHandler {
     @Getter
     @Setter
     private boolean drawTestGui = false;
-    @Setter @Getter
+    @Setter
+    @Getter
     private boolean drawMainGui = false;
 
     @SubscribeEvent

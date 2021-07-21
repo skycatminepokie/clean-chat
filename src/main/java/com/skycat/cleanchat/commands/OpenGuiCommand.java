@@ -1,7 +1,6 @@
-package com.skycat.cleanchat.gui;
+package com.skycat.cleanchat.commands;
 
 import com.skycat.cleanchat.CleanChat;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

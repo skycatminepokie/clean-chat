@@ -33,8 +33,7 @@ public class ChatHandler {
                 new ChatFilterSetting("[!]", PLAYER, true, "Ad", "exclaimAd"),
                 new ChatFilterSetting("coins fast", PLAYER, true, "Get coins fast scam", "fastCoinScam"),
                 new ChatFilterSetting("ending soon", PLAYER, true, "ending soon", "lmaoToLol", "lol"),
-                new ChatFilterSetting("go quick", PLAYER, true, "go quick", "goQuick"),
-                new ChatFilterSetting("bid", PLAYER, true, "bid", "bidAd")));
+                new ChatFilterSetting("go quick", PLAYER, true, "go quick", "goQuick")));
 
         chatFilterSettingGroups.add(new ChatFilterSettingGroup(true, "Profanity Filter",
                 new ChatFilterSetting("wtf", PLAYER, true, "What the", "whatThe", "wot"),

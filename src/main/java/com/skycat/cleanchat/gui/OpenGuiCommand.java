@@ -20,11 +20,11 @@ public class OpenGuiCommand extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        if (args.length == 2) {
-            if (args[1].equalsIgnoreCase("test")) {
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("test")) {
                 CleanChat.getGuiHandler().setDrawTestGui(true);
             } else {
-                if (args[1].equalsIgnoreCase("main")) {
+                if (args[0].equalsIgnoreCase("main")) {
                     CleanChat.getGuiHandler().setDrawMainGui(true);
                 }
             }

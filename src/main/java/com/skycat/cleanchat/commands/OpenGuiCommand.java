@@ -1,6 +1,8 @@
 package com.skycat.cleanchat.commands;
 
 import com.skycat.cleanchat.CleanChat;
+import com.skycat.cleanchat.gui.ChatFilterSettingsGui;
+import com.skycat.cleanchat.gui.TestScreen;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -21,10 +23,16 @@ public class OpenGuiCommand extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("test")) {
-                CleanChat.getGuiHandler().setDrawTestGui(true);
+                CleanChat.getGuiHandler().setToDraw(new TestScreen());
             } else {
                 if (args[0].equalsIgnoreCase("main")) {
-                    CleanChat.getGuiHandler().setDrawMainGui(true);
+                    CleanChat.getGuiHandler().setToDraw(
+                            new ChatFilterSettingsGui(
+                                    CleanChat.getChatHandler().getChatFilter().getSettingGroups().get(0).getSettings(),
+                                    0,
+                                    CleanChat.getChatHandler().getChatFilter().getSettingGroups().size() - 1
+                            )
+                    );
                 }
             }
         }

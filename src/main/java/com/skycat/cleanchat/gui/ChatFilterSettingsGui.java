@@ -81,11 +81,10 @@ public class ChatFilterSettingsGui extends GuiScreen {
         if (last > guiNumber) {
             buttonHeight = 20;
             buttonWidth = 20;
-            //TODO Add navigation buttons
             buttonList.add(new NewGuiButton(
                     buttonNumber++,
                     guiWidth - rightMargin - buttonWidth,
-                    guiHeight - buttonHeight - 10,
+                    guiHeight - buttonHeight - bottomMargin,
                     buttonWidth,
                     buttonHeight,
                     ">",
@@ -94,6 +93,20 @@ public class ChatFilterSettingsGui extends GuiScreen {
                             guiNumber + 1,
                             last)));
 
+        }
+        //Add previous button
+        if (guiNumber != 0) {
+            buttonList.add(new NewGuiButton(
+                    buttonNumber++,
+                    leftMargin,
+                    guiHeight - buttonHeight - bottomMargin,
+                    buttonWidth,
+                    buttonHeight,
+                    "<",
+                    new ChatFilterSettingsGui(
+                            CleanChat.getChatHandler().getChatFilter().getSettingGroups().get(guiNumber - 1).getSettings(),
+                            guiNumber - 1,
+                            last)));
         }
 
         //TODO Add title
